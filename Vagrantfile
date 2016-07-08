@@ -12,8 +12,7 @@ Vagrant.configure(2) do |config|
   config.vm.hostname = "urbis"
 
   config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "base/main.yml"
-      ansible.playbook = "jupyterrole/main.yml"
+      ansible.playbook = "main.yml"
   end
 
   config.vm.provider "virtualbox" do |v|

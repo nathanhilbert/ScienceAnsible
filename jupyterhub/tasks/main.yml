@@ -8,7 +8,7 @@
 
 - name: easy install for pip
   become: yes
-  easy_install: executable="/usr/bin/easy_install" name=pip
+  easy_install: executable="/usr/bin/easy_install-2.7" name=pip
   tags: jupyter
 
 - name: easy install for pip3
