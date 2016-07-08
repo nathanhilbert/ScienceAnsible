@@ -1,0 +1,16 @@
+---
+# tasks file for ansible-postgis3d
+- postgresql_user: name=urbis 
+                    password=urbis 
+                    role_attr_flags=CREATEDB,SUPERUSER,CREATEROLE,LOGIN,REPLICATION
+
+- postgresql_db: name=urbis
+                 encoding='UTF-8'
+                 lc_collate='de_DE.UTF-8'
+                 lc_ctype='de_DE.UTF-8'
+                 template='template0'
+                 owner=urbis
+
+- postgresql_ext: name=postgis db=urbis
+
+- postgresql_ext: name=pointcloud db=urbis

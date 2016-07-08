@@ -5,24 +5,20 @@ Vagrant.configure(2) do |config|
 
   config.vm.define "trusty" do |trusty|
     trusty.vm.box = "ubuntu/trusty64"
-  end
+  end 
 
-  config.vm.define "jessie" do |jessie|
-    jessie.vm.box = "debian/jessie64"
-  end
-
-  config.vm.define "sid" do |sid|
-    sid.vm.box = "loicfrering/debian-unstable"
-  end
-
-  config.vm.network "public_network"
-  config.vm.hostname = "postgis3d"
+  # config.vm.network "private_network", ip: "192.168.99.151",
+  #   virtualbox__intnet: true
+  config.vm.hostname = "urbis"
 
   config.vm.provision "ansible" do |ansible|
-      ansible.playbook = "test.yml"
+      ansible.playbook = "base/main.yml"
+      ansible.playbook = "jupyterrole/main.yml"
   end
 
   config.vm.provider "virtualbox" do |v|
+    config.vm.network "private_network", ip: "192.168.99.151", :name => 'vboxnet0', :adapter => 2
     v.memory = 3096 # sfcgal compilation needs a minimum of 3GB
+    v.cpus = "2"
   end
 end
