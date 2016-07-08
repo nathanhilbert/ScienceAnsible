@@ -22,7 +22,7 @@ PATH=/sbin:/usr/sbin:/bin:/usr/bin:/usr/local/bin
 DESC="Multi-user server for Jupyter notebooks"
 NAME=jupyterhub
 DAEMON=/usr/local/bin/jupyterhub
-DAEMON_ARGS="--config=/etc/jupyterhub/jupyterhub_config.py"
+DAEMON_ARGS="--config=/etc/jupyterhub/jupyterhub_config.py --no-ssl --ip=192.168.99.151"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
