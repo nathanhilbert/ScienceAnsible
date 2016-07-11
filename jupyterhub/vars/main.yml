@@ -4,10 +4,6 @@ jupyter_pkgs:
   - python3
   - python3-setuptools
   - python3-dev
-  - python3-numpy
-  - python3-gdal
-  - python3-matplotlib
-  - python3-pandas
   - python
   - python-setuptools
   - python-dev
@@ -15,3 +11,13 @@ jupyter_pkgs:
   - npm
   - nodejs-legacy
   - git
+
+spatial_pkgs:
+  - python3-numpy
+  - python3-gdal
+  - python3-matplotlib
+  - python3-pandas
+  - python-numpy
+  - python-gdal
+  - python-matplotlib
+  - python-pandas

@@ -81,3 +81,46 @@
   become: yes
   tags: jupyter
 
+- name: isntall pyhton2 spawner kernel requirements
+  pip: executable=pip2 name='jupyter ipython' extra_args='--upgrade'
+  become: yes
+  tags: spatial  
+
+- name: install python2 spawner
+  become: yes
+  command: ipython kernel install
+
+- name: restart jupyterhub
+  become: yes
+  service: name=jupyterhub state=restarted
+
+- name: Add research spatial packages
+  apt_repository: repo="ppa:ubuntugis/ubuntugis-unstable"
+                  state=present
+  become: yes
+
+- name: install all of the necessary spatial packages
+  apt: name={{item}} state=present update_cache=yes
+  become: yes
+  with_items: "{{spatial_pkgs}}"
+  tags: spatial
+
+- name: Clone pyspatial
+  become: yes
+  git: repo=https://github.com/granularag/pyspatial.git
+       dest=~/pyspatial
+
+- name: Install Deps for pyspatial
+  become: yes
+  command: ~/pyspatial/scripts/requirements-ubuntu.sh 
+
+- name: install requirements for pyspatial
+  pip: executable=pip2 requirements="~/pyspatial/requirements.txt" extra_args='--upgrade'
+  become: yes
+
+- name: Install pyspatial for python2 
+  become: yes
+  command: python2 ~/pyspatial/setup.py install
+
+
+
