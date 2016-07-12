@@ -61,128 +61,130 @@
     - xz-utils
 
 
-- apt: name=libpcl-dev
-  when: ansible_distribution_release != "trusty"
+# - apt: name=libpcl-dev
+#   when: ansible_distribution_release != "trusty"
+#   become: yes
+
+# - apt: name=libpcl-all-dev
+#   when: ansible_distribution_release == "trusty"
+#   become: yes
+
+# ###### CGAL
+
+# - name: Install CGAL from packages
+#   apt: pkg=libcgal-dev
+#   when: ansible_distribution_release != "trusty"
+#   become: yes
+
+# - name: Get CGAL source code
+#   get_url: url=https://github.com/CGAL/cgal/releases/download/releases/CGAL-4.6.3/CGAL-4.6.3.tar.xz
+#            dest={{ build_directory }}
+#   when: ansible_distribution_release == "trusty"
+
+# - name: untar cgal
+#   shell: tar -Jxf CGAL-4.6.3.tar.xz
+#         chdir={{ build_directory}}
+#         creates={{ build_directory}}/CGAL-4.6.3
+#   when: ansible_distribution_release == "trusty"
+
+# - name: compile cgal
+#   shell: cmake . && make -j{{ ansible_processor_vcpus }}
+#          chdir={{ build_directory }}/CGAL-4.6.3
+#   when: ansible_distribution_release == "trusty"
+
+# - name: install cgal
+#   shell: make install
+#          chdir={{ build_directory }}/CGAL-4.6.3
+#   become: yes
+#   when: ansible_distribution_release == "trusty"
+
+
+# ###### SFCGAL
+
+# - name: get sfcgal code
+#   get_url: url=https://github.com/Oslandia/SFCGAL/archive/v{{ sfcgal_version }}.tar.gz
+#            dest={{ build_directory }}/sfcgal-{{ sfcgal_version }}.tar.gz
+
+# - name: untar sfgcal archive
+#   shell: tar -xzf sfcgal-{{ sfcgal_version }}.tar.gz
+#          chdir={{ build_directory}}
+#          creates={{ build_directory}}/SFCGAL-{{ sfcgal_version }}
+
+# - name: compile compilation
+#   shell: cmake . && make -j{{ ansible_processor_vcpus }}
+#          chdir={{ build_directory }}/SFCGAL-{{ sfcgal_version }}
+
+# - name: install sfcgal
+#   shell: make install
+#          chdir={{ build_directory }}/SFCGAL-{{ sfcgal_version }}
+#   become: yes
+
+
+# - name: ldconfig
+#   command: ldconfig
+#   become: yes
+
+# ###### POSTGIS
+
+# - name: getting postgis from osgeo
+#   get_url: url=http://download.osgeo.org/postgis/source/postgis-{{ postgis_version }}.tar.gz
+#             dest={{ build_directory }}/
+
+# - name: untar postgis
+#   shell: tar -xzf postgis-{{ postgis_version }}.tar.gz
+#          chdir={{ build_directory }}
+#          creates={{ build_directory}}/postgis-{{ postgis_version }}
+
+# - name: compile postgis
+#   shell: ./configure && make
+#          chdir={{ build_directory }}/postgis-{{ postgis_version }}/
+
+# - name: install postgis
+#   shell: make install
+#          chdir={{ build_directory }}/postgis-{{ postgis_version }}/
+#   become: yes
+
+
+# ###### POINTCLOUD
+
+# - get_url: url=https://github.com/pgpointcloud/pointcloud/archive/{{ pointcloud_version }}.tar.gz
+#            dest={{ build_directory }}/
+
+# - name: untar pointcloud
+#   shell: tar -xvf pointcloud-{{ pointcloud_version }}.tar.gz
+#          chdir={{ build_directory }}
+#          creates={{ build_directory}}/pointcloud-{{ pointcloud_version }}
+
+# - name: compile pointcloud
+#   shell: ./autogen.sh && ./configure && make -j{{ ansible_processor_vcpus }}
+#          chdir={{ build_directory }}/pointcloud-{{ pointcloud_version }}
+
+# - name: install pointcloud
+#   shell: make install
+#          chdir={{ build_directory }}/pointcloud-{{ pointcloud_version }}
+#   become: yes
+
+# ###### PDAL
+
+# - name: getting pdal
+#   get_url: url=https://github.com/PDAL/PDAL/archive/{{ pdal_version }}.tar.gz
+#            dest={{ build_directory }}/
+
+# - name: untar pdal
+#   shell: tar -xvf PDAL-{{ pdal_version }}.tar.gz
+#          chdir={{ build_directory }}
+
+# - name: compile pdal
+#   shell: cmake -DBUILD_PLUGIN_PCL=ON . && make -j{{ ansible_processor_vcpus }}
+#          chdir={{ build_directory }}/PDAL-{{ pdal_version }}
+
+# - name: install pdal
+#   shell: make install
+#          chdir={{ build_directory }}/PDAL-{{ pdal_version }}
+#   become: yes
+
+- service: name=postgresql state=restarted
   become: yes
-
-- apt: name=libpcl-all-dev
-  when: ansible_distribution_release == "trusty"
-  become: yes
-
-###### CGAL
-
-- name: Install CGAL from packages
-  apt: pkg=libcgal-dev
-  when: ansible_distribution_release != "trusty"
-  become: yes
-
-- name: Get CGAL source code
-  get_url: url=https://github.com/CGAL/cgal/releases/download/releases/CGAL-4.6.3/CGAL-4.6.3.tar.xz
-           dest={{ build_directory }}
-  when: ansible_distribution_release == "trusty"
-
-- name: untar cgal
-  shell: tar -Jxf CGAL-4.6.3.tar.xz
-        chdir={{ build_directory}}
-        creates={{ build_directory}}/CGAL-4.6.3
-  when: ansible_distribution_release == "trusty"
-
-- name: compile cgal
-  shell: cmake . && make -j{{ ansible_processor_vcpus }}
-         chdir={{ build_directory }}/CGAL-4.6.3
-  when: ansible_distribution_release == "trusty"
-
-- name: install cgal
-  shell: make install
-         chdir={{ build_directory }}/CGAL-4.6.3
-  become: yes
-  when: ansible_distribution_release == "trusty"
-
-
-###### SFCGAL
-
-- name: get sfcgal code
-  get_url: url=https://github.com/Oslandia/SFCGAL/archive/v{{ sfcgal_version }}.tar.gz
-           dest={{ build_directory }}/sfcgal-{{ sfcgal_version }}.tar.gz
-
-- name: untar sfgcal archive
-  shell: tar -xzf sfcgal-{{ sfcgal_version }}.tar.gz
-         chdir={{ build_directory}}
-         creates={{ build_directory}}/SFCGAL-{{ sfcgal_version }}
-
-- name: compile compilation
-  shell: cmake . && make -j{{ ansible_processor_vcpus }}
-         chdir={{ build_directory }}/SFCGAL-{{ sfcgal_version }}
-
-- name: install sfcgal
-  shell: make install
-         chdir={{ build_directory }}/SFCGAL-{{ sfcgal_version }}
-  become: yes
-
-
-- name: ldconfig
-  command: ldconfig
-  become: yes
-
-###### POSTGIS
-
-- name: getting postgis from osgeo
-  get_url: url=http://download.osgeo.org/postgis/source/postgis-{{ postgis_version }}.tar.gz
-            dest={{ build_directory }}/
-
-- name: untar postgis
-  shell: tar -xzf postgis-{{ postgis_version }}.tar.gz
-         chdir={{ build_directory }}
-         creates={{ build_directory}}/postgis-{{ postgis_version }}
-
-- name: compile postgis
-  shell: ./configure && make
-         chdir={{ build_directory }}/postgis-{{ postgis_version }}/
-
-- name: install postgis
-  shell: make install
-         chdir={{ build_directory }}/postgis-{{ postgis_version }}/
-  become: yes
-
-
-###### POINTCLOUD
-
-- get_url: url=https://github.com/pgpointcloud/pointcloud/archive/{{ pointcloud_version }}.tar.gz
-           dest={{ build_directory }}/
-
-- name: untar pointcloud
-  shell: tar -xvf pointcloud-{{ pointcloud_version }}.tar.gz
-         chdir={{ build_directory }}
-         creates={{ build_directory}}/pointcloud-{{ pointcloud_version }}
-
-- name: compile pointcloud
-  shell: ./autogen.sh && ./configure && make -j{{ ansible_processor_vcpus }}
-         chdir={{ build_directory }}/pointcloud-{{ pointcloud_version }}
-
-- name: install pointcloud
-  shell: make install
-         chdir={{ build_directory }}/pointcloud-{{ pointcloud_version }}
-  become: yes
-
-###### PDAL
-
-- name: getting pdal
-  get_url: url=https://github.com/PDAL/PDAL/archive/{{ pdal_version }}.tar.gz
-           dest={{ build_directory }}/
-
-- name: untar pdal
-  shell: tar -xvf PDAL-{{ pdal_version }}.tar.gz
-         chdir={{ build_directory }}
-
-- name: compile pdal
-  shell: cmake -DBUILD_PLUGIN_PCL=ON . && make -j{{ ansible_processor_vcpus }}
-         chdir={{ build_directory }}/PDAL-{{ pdal_version }}
-
-- name: install pdal
-  shell: make install
-         chdir={{ build_directory }}/PDAL-{{ pdal_version }}
-  become: yes
-
 
 - copy: src=pg_hba.conf dest=/etc/postgresql/9.5/main/pg_hba.conf owner=postgres group=postgres mode=0644
   become: yes

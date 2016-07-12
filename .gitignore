@@ -1,4 +1,8 @@
 .vagrant
 .DS_Store
-hostshare/*
-!hostshare/.gitkeep
+data/homeshare/*
+!data/homeshare/.gitkeep
+data/postgresdata/*
+!data/postgresdata/.gitkeep
+!data/homeshare/scripts
+!data/homeshare/postgresbackup/.gitkeep

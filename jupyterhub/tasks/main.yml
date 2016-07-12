@@ -71,6 +71,11 @@
   become: yes
   tags: jupyter
 
+- name: put jupyter config in the proper plate
+  copy: src=jupyterhub_config.py dest=/etc/jupyterhub/jupyterhub_config.py mode=644 owner=root group=root
+  become: yes
+  tags: jupyter
+
 - name: Ensure hostname is in /etc/hosts file
   lineinfile: dest=/etc/hosts regexp="{{ansible_hostname}}" line="{{ansible_default_ipv4.address}}  {{ansible_hostname}}"
   become: yes

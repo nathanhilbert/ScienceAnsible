@@ -15,8 +15,10 @@ Vagrant.configure(2) do |config|
       ansible.playbook = "main.yml"
   end
 
+  config.vm.synced_folder "data/homeshare", "~/", owner: "vagrant", group: "vagrant"
+
   config.vm.provider "virtualbox" do |v|
-    config.vm.network "private_network", ip: "192.168.99.151", :name => 'vboxnet0', :adapter => 2
+    config.vm.network "private_network", ip: "192.168.99.152", :name => 'vboxnet0', :adapter => 2
     v.memory = 3096 # sfcgal compilation needs a minimum of 3GB
     v.cpus = "2"
   end
