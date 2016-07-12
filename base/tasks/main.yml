@@ -137,43 +137,57 @@
 
 ###### POSTGIS
 
+- stat: path=/usr/share/postgresql/9.5/extension/postgis.control
+  register: postgis
+
 - name: getting postgis from osgeo
   get_url: url=http://download.osgeo.org/postgis/source/postgis-{{ postgis_version }}.tar.gz
             dest={{ build_directory }}/
+  when: postgis.stat.islnk is not defined            
 
 - name: untar postgis
   shell: tar -xzf postgis-{{ postgis_version }}.tar.gz
          chdir={{ build_directory }}
          creates={{ build_directory}}/postgis-{{ postgis_version }}
+  when: postgis.stat.islnk is not defined         
 
 - name: compile postgis
   shell: ./configure && make
          chdir={{ build_directory }}/postgis-{{ postgis_version }}/
+  when: postgis.stat.islnk is not defined         
 
 - name: install postgis
   shell: make install
          chdir={{ build_directory }}/postgis-{{ postgis_version }}/
   become: yes
+  when: postgis.stat.islnk is not defined  
 
 
 ###### POINTCLOUD
 
+- stat: path=/usr/share/postgresql/9.5/extension/pointcloud.control
+  register: pointcloud
+
 - get_url: url=https://github.com/pgpointcloud/pointcloud/archive/{{ pointcloud_version }}.tar.gz
            dest={{ build_directory }}/
+  when: pointcloud.stat.islnk is not defined           
 
 - name: untar pointcloud
   shell: tar -xvf pointcloud-{{ pointcloud_version }}.tar.gz
          chdir={{ build_directory }}
          creates={{ build_directory}}/pointcloud-{{ pointcloud_version }}
+  when: pointcloud.stat.islnk is not defined         
 
 - name: compile pointcloud
   shell: ./autogen.sh && ./configure && make -j{{ ansible_processor_vcpus }}
          chdir={{ build_directory }}/pointcloud-{{ pointcloud_version }}
+  when: pointcloud.stat.islnk is not defined         
 
 - name: install pointcloud
   shell: make install
          chdir={{ build_directory }}/pointcloud-{{ pointcloud_version }}
   become: yes
+  when: pointcloud.stat.islnk is not defined  
 
 ###### PDAL
 

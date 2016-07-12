@@ -6,10 +6,10 @@
   with_items: "{{jupyter_pkgs}}"
   tags: jupyter
 
-- name: easy install for pip
-  become: yes
-  easy_install: executable="/usr/bin/easy_install-2.7" name=pip
-  tags: jupyter
+# - name: easy install for pip
+#   become: yes
+#   easy_install: executable="/usr/bin/easy_install-2.7" name=pip
+#   tags: jupyter
 
 - name: easy install for pip3
   become: yes
@@ -105,7 +105,7 @@
   become: yes
 
 - name: install all of the necessary spatial packages
-  apt: name={{item}} state=present update_cache=yes
+  apt: name={{item}} state=present
   become: yes
   with_items: "{{spatial_pkgs}}"
   tags: spatial
@@ -114,6 +114,7 @@
   become: yes
   git: repo=https://github.com/granularag/pyspatial.git
        dest=/home/vagrant/pyspatial
+       force=yes
 
 - name: Install Deps for pyspatial
   become: yes
