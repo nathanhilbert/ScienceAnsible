@@ -71,15 +71,18 @@
 
 ###### CGAL
 
+- stat: path=/usr/local/include/CGAL
+  register: cgal
+
 - name: Install CGAL from packages
   apt: pkg=libcgal-dev
-  when: ansible_distribution_release != "trusty"
+  when: ansible_distribution_release != "trusty" and cgal.stat.isdir is not defined 
   become: yes
 
 - name: Get CGAL source code
   get_url: url=https://github.com/CGAL/cgal/releases/download/releases/CGAL-4.6.3/CGAL-4.6.3.tar.xz
            dest={{ build_directory }}
-  when: ansible_distribution_release == "trusty"
+  when: ansible_distribution_release == "trusty" and cgal.stat.isdir is not defined 
 
 - name: untar cgal
   shell: tar -Jxf CGAL-4.6.3.tar.xz
@@ -90,34 +93,42 @@
 - name: compile cgal
   shell: cmake . && make -j{{ ansible_processor_vcpus }}
          chdir={{ build_directory }}/CGAL-4.6.3
-  when: ansible_distribution_release == "trusty"
+  when: ansible_distribution_release == "trusty" and cgal.stat.isdir is not defined 
 
 - name: install cgal
   shell: make install
          chdir={{ build_directory }}/CGAL-4.6.3
   become: yes
-  when: ansible_distribution_release == "trusty"
+  when: ansible_distribution_release == "trusty" and cgal.stat.isdir is not defined 
 
 
 ###### SFCGAL
 
+
+- stat: path=/usr/local/include/SFCGAL
+  register: sfcgal
+
 - name: get sfcgal code
   get_url: url=https://github.com/Oslandia/SFCGAL/archive/v{{ sfcgal_version }}.tar.gz
            dest={{ build_directory }}/sfcgal-{{ sfcgal_version }}.tar.gz
+  when: sfcgal.stat.isdir is not defined          
 
 - name: untar sfgcal archive
   shell: tar -xzf sfcgal-{{ sfcgal_version }}.tar.gz
          chdir={{ build_directory}}
          creates={{ build_directory}}/SFCGAL-{{ sfcgal_version }}
+  when: sfcgal.stat.isdir is not defined        
 
 - name: compile compilation
   shell: cmake . && make -j{{ ansible_processor_vcpus }}
          chdir={{ build_directory }}/SFCGAL-{{ sfcgal_version }}
+  when: sfcgal.stat.isdir is not defined        
 
 - name: install sfcgal
   shell: make install
          chdir={{ build_directory }}/SFCGAL-{{ sfcgal_version }}
   become: yes
+  when: sfcgal.stat.isdir is not defined 
 
 
 - name: ldconfig
@@ -166,22 +177,29 @@
 
 ###### PDAL
 
+- stat: path=/usr/local/include/pdal
+  register: pdal
+
 - name: getting pdal
   get_url: url=https://github.com/PDAL/PDAL/archive/{{ pdal_version }}.tar.gz
            dest={{ build_directory }}/
+  when: pdal.stat.isdir is not defined           
 
 - name: untar pdal
   shell: tar -xvf PDAL-{{ pdal_version }}.tar.gz
          chdir={{ build_directory }}
+  when: pdal.stat.isdir is not defined         
 
 - name: compile pdal
   shell: cmake -DBUILD_PLUGIN_PCL=ON . && make -j{{ ansible_processor_vcpus }}
          chdir={{ build_directory }}/PDAL-{{ pdal_version }}
+  when: pdal.stat.isdir is not defined         
 
 - name: install pdal
   shell: make install
          chdir={{ build_directory }}/PDAL-{{ pdal_version }}
   become: yes
+  when: pdal.stat.isdir is not defined  
 
 - service: name=postgresql state=restarted
   become: yes
