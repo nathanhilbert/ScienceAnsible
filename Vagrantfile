@@ -15,7 +15,7 @@ Vagrant.configure(2) do |config|
       ansible.playbook = "main.yml"
   end
 
-  config.vm.synced_folder "data/homeshare", "~/", owner: "vagrant", group: "vagrant"
+  config.vm.synced_folder "data/homeshare", "/home/vagrant/homeshare", owner: "vagrant", group: "vagrant"
 
   config.vm.provider "virtualbox" do |v|
     config.vm.network "private_network", ip: "192.168.99.152", :name => 'vboxnet0', :adapter => 2

@@ -1,103 +1,103 @@
----
-# file: roles/jupyter/tasks/main.yml
-- name: make sure necessary packages are installed
-  apt: name={{item}} state=present update_cache=yes
-  become: yes
-  with_items: "{{jupyter_pkgs}}"
-  tags: jupyter
+# ---
+# # file: roles/jupyter/tasks/main.yml
+# - name: make sure necessary packages are installed
+#   apt: name={{item}} state=present update_cache=yes
+#   become: yes
+#   with_items: "{{jupyter_pkgs}}"
+#   tags: jupyter
 
-- name: easy install for pip
-  become: yes
-  easy_install: executable="/usr/bin/easy_install-2.7" name=pip
-  tags: jupyter
+# - name: easy install for pip
+#   become: yes
+#   easy_install: executable="/usr/bin/easy_install-2.7" name=pip
+#   tags: jupyter
 
-- name: easy install for pip3
-  become: yes
-  easy_install: executable="/usr/bin/easy_install3" name=pip
-  tags: jupyter
+# - name: easy install for pip3
+#   become: yes
+#   easy_install: executable="/usr/bin/easy_install3" name=pip
+#   tags: jupyter
 
-- name: install npm package configurable-http-proxy
-  npm: name=configurable-http-proxy global=yes state=present
-  become: yes
-  tags: jupyter
+# - name: install npm package configurable-http-proxy
+#   npm: name=configurable-http-proxy global=yes state=present
+#   become: yes
+#   tags: jupyter
 
-- name: add jupyter group
-  group: name=jupyter state=present
-  become: yes
-  tags: jupyter
+# - name: add jupyter group
+#   group: name=jupyter state=present
+#   become: yes
+#   tags: jupyter
 
-- name: add jupyter user
-  user: name=jupyter state=present groups=jupyter,shadow password="$6$c95tRbL34V5wVrA6$5iccT6r3LwWiWNpNyHmnKW4JhLbBfbva/wAUWwkD9Ks2dT/LnrYLx2Xs2lzQSYw.Cp7dvKS8VudQ7jh/ljBYQ."
-  become: yes
-  tags: jupyter
+# - name: add jupyter user
+#   user: name=jupyter state=present groups=jupyter,shadow password="$6$c95tRbL34V5wVrA6$5iccT6r3LwWiWNpNyHmnKW4JhLbBfbva/wAUWwkD9Ks2dT/LnrYLx2Xs2lzQSYw.Cp7dvKS8VudQ7jh/ljBYQ."
+#   become: yes
+#   tags: jupyter
 
-- name: create jupyterhub folder in etc
-  file: path=/etc/jupyterhub state=directory mode=0755 owner=jupyter group=jupyter
-  become: yes
-  tags: jupyter
+# - name: create jupyterhub folder in etc
+#   file: path=/etc/jupyterhub state=directory mode=0755 owner=jupyter group=jupyter
+#   become: yes
+#   tags: jupyter
 
-- name: copy jupyterhub sudospawner sudo config
-  copy: src=sudo_jupyter dest=/etc/sudoers.d/jupyter mode=0440 owner=root group=root
-  become: yes
-  tags: jupyter
+# - name: copy jupyterhub sudospawner sudo config
+#   copy: src=sudo_jupyter dest=/etc/sudoers.d/jupyter mode=0440 owner=root group=root
+#   become: yes
+#   tags: jupyter
 
-- name: copy requirements file for jupyterhub
-  copy: src=requirements.txt dest=/root/jupyterhub_requirements.txt
-  become: yes
-  tags: jupyter
+# - name: copy requirements file for jupyterhub
+#   copy: src=requirements.txt dest=/root/jupyterhub_requirements.txt
+#   become: yes
+#   tags: jupyter
 
-- name: install jupyter, jupyterhub, sudospawner via pip3
-  pip: executable=pip3 requirements="/root/jupyterhub_requirements.txt" extra_args='--upgrade'
-  become: yes
-  tags: jupyter
+# - name: install jupyter, jupyterhub, sudospawner via pip3
+#   pip: executable=pip3 requirements="/root/jupyterhub_requirements.txt" extra_args='--upgrade'
+#   become: yes
+#   tags: jupyter
 
-- name: configure jupyterhub
-  command: /usr/local/bin/jupyterhub --generate-config chdir=/etc/jupyterhub/ creates=/etc/jupyterhub/jupyterhub_config.py
-  become: yes
-  tags: jupyter
+# - name: configure jupyterhub
+#   command: /usr/local/bin/jupyterhub --generate-config chdir=/etc/jupyterhub/ creates=/etc/jupyterhub/jupyterhub_config.py
+#   become: yes
+#   tags: jupyter
 
-- name: set jupyterhub admin user
-  lineinfile: dest=/etc/jupyterhub/jupyterhub_config.py line="c.Authenticator.admin_users = {'jupyter'}"
-  become: yes
-  tags: jupyter
+# - name: set jupyterhub admin user
+#   lineinfile: dest=/etc/jupyterhub/jupyterhub_config.py line="c.Authenticator.admin_users = {'jupyter'}"
+#   become: yes
+#   tags: jupyter
 
-- name: set jupyterhub create users
-  lineinfile: dest=/etc/jupyterhub/jupyterhub_config.py line="c.LocalAuthenticator.create_system_users = True"
-  become: yes
-  tags: jupyter
+# - name: set jupyterhub create users
+#   lineinfile: dest=/etc/jupyterhub/jupyterhub_config.py line="c.LocalAuthenticator.create_system_users = True"
+#   become: yes
+#   tags: jupyter
 
-- name: install jupyterhub init script
-  copy: src=jupyter.init dest=/etc/init.d/jupyterhub mode=755 owner=root group=root
-  become: yes
-  tags: jupyter
+# - name: install jupyterhub init script
+#   copy: src=jupyter.init dest=/etc/init.d/jupyterhub mode=755 owner=root group=root
+#   become: yes
+#   tags: jupyter
 
-- name: put jupyter config in the proper plate
-  copy: src=jupyterhub_config.py dest=/etc/jupyterhub/jupyterhub_config.py mode=644 owner=root group=root
-  become: yes
-  tags: jupyter
+# - name: put jupyter config in the proper plate
+#   copy: src=jupyterhub_config.py dest=/etc/jupyterhub/jupyterhub_config.py mode=644 owner=root group=root
+#   become: yes
+#   tags: jupyter
 
-- name: Ensure hostname is in /etc/hosts file
-  lineinfile: dest=/etc/hosts regexp="{{ansible_hostname}}" line="{{ansible_default_ipv4.address}}  {{ansible_hostname}}"
-  become: yes
-  tags: jupyter
+# - name: Ensure hostname is in /etc/hosts file
+#   lineinfile: dest=/etc/hosts regexp="{{ansible_hostname}}" line="{{ansible_default_ipv4.address}}  {{ansible_hostname}}"
+#   become: yes
+#   tags: jupyter
 
-- name: start jupyterhub
-  service: name=jupyterhub enabled=yes state=started
-  become: yes
-  tags: jupyter
+# - name: start jupyterhub
+#   service: name=jupyterhub enabled=yes state=started
+#   become: yes
+#   tags: jupyter
 
-- name: isntall pyhton2 spawner kernel requirements
-  pip: executable=pip2 name='jupyter ipython' extra_args='--upgrade'
-  become: yes
-  tags: spatial  
+# - name: isntall pyhton2 spawner kernel requirements
+#   pip: executable=pip2 name='jupyter ipython' extra_args='--upgrade'
+#   become: yes
+#   tags: spatial  
 
-- name: install python2 spawner
-  become: yes
-  command: ipython kernel install
+# - name: install python2 spawner
+#   become: yes
+#   command: ipython kernel install
 
-- name: restart jupyterhub
-  become: yes
-  service: name=jupyterhub state=restarted
+# - name: restart jupyterhub
+#   become: yes
+#   service: name=jupyterhub state=restarted
 
 - name: Add research spatial packages
   apt_repository: repo="ppa:ubuntugis/ubuntugis-unstable"
@@ -113,19 +113,21 @@
 - name: Clone pyspatial
   become: yes
   git: repo=https://github.com/granularag/pyspatial.git
-       dest=~/pyspatial
+       dest=/home/vagrant/pyspatial
 
 - name: Install Deps for pyspatial
   become: yes
-  command: ~/pyspatial/scripts/requirements-ubuntu.sh 
+  command: /home/vagrant/pyspatial/scripts/requirements-ubuntu.sh 
 
 - name: install requirements for pyspatial
-  pip: executable=pip2 requirements="~/pyspatial/requirements.txt" extra_args='--upgrade'
+  pip: executable=pip2 requirements="/home/vagrant/pyspatial/requirements.txt"
   become: yes
 
 - name: Install pyspatial for python2 
   become: yes
-  command: python2 ~/pyspatial/setup.py install
+  args:
+    chdir: /home/vagrant/pyspatial
+  command: python2 setup.py install
 
 
 
