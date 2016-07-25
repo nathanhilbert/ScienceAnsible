@@ -1,5 +1,8 @@
 ---
 - hosts: all
   roles:
-    - base
-    - jupyterhub
+    # - base
+    # - jupyterhub
+    # - java
+    # - tomcat
+    - geoserver
